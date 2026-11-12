@@ -1,17 +1,34 @@
 import { spawn, spawnSync } from 'node:child_process';
 
 export const isWindows = process.platform === 'win32';
-export const npmCommand = isWindows ? 'npm.cmd' : 'npm';
+
+const npmCli = process.env.npm_execpath;
+
+function npmInvocation(args) {
+  if (isWindows) {
+    if (!npmCli || !npmCli.endsWith('.js')) {
+      throw new Error('Не найден npm CLI. Запустите проект через npm run demo.');
+    }
+
+    return [process.execPath, [npmCli, ...args]];
+  }
+
+  return ['npm', args];
+}
 
 export function spawnNpm(args, options = {}) {
-  return spawn(npmCommand, args, {
+  const [command, commandArgs] = npmInvocation(args);
+
+  return spawn(command, commandArgs, {
     stdio: 'inherit',
     ...options
   });
 }
 
 export function spawnNpmSync(args, options = {}) {
-  return spawnSync(npmCommand, args, {
+  const [command, commandArgs] = npmInvocation(args);
+
+  return spawnSync(command, commandArgs, {
     stdio: 'inherit',
     ...options
   });

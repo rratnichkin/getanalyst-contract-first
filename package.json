@@ -24,5 +24,11 @@
   },
   "engines": {
     "node": ">=20.19.0 <25"
+  },
+  "dependencies": {
+    "@scarf/scarf": "^1.4.0"
+  },
+  "allowScripts": {
+    "@scarf/scarf@1.4.0": true
   }
 }
